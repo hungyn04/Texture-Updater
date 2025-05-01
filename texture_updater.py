@@ -10,16 +10,16 @@ class render_control(object):
     # class taken from my "flappy clone" project
     def __init__(self):
         pg.font.init()
+        self.font = (pg.font.Font("Mojangles.ttf", 10), pg.font.Font("Mojangles.ttf", 20), pg.font.Font("Mojangles.ttf", 30))
         self.bg = pg.surface.Surface((1, 1), pg.SRCALPHA)
         self.bg.fill((0, 0, 0, 150))
 
-    def text(self, content: str, des: pg.Surface, align: tuple = (0, 0), offset: tuple = (0, 0), area: tuple = None, with_bg: bool = False, color="white", antialiasing: bool = False, size: float = 20):
+    def text(self, content: str, des: pg.Surface, align: tuple = (0, 0), offset: tuple = (0, 0), area: tuple = None, with_bg: bool = False, color="white", antialiasing: bool = False, size: int = 1):
         # align: (horizontal, vertical) ---- 0: left/top, 1: middle, 2: right/bottom
-        self.font = pg.font.SysFont("Mojangles", size)
         __line_list = content.split("\n")
         __line_count = len(__line_list)
         for __lindex, __lcurrent in enumerate(__line_list):
-            __text = self.font.render(__lcurrent, antialiasing, color)
+            __text = self.font[size - 1].render(__lcurrent, antialiasing, color)
             __text_rect = __text.get_rect(topleft=(0, 0))
             __w, __h = area if isinstance(area, tuple) else (mcord.ww, mcord.wh)
             __al_offset_x = (0, __w / 2 - __text_rect.width / 2, __w - __text_rect.width)
@@ -177,10 +177,10 @@ while not _exit:
     pg.draw.rect(screen, "white", (sx, sy, w * scale, h * scale), 1)
     pg.draw.rect(screen, "red", (sx + math.ceil(tex_sel_pos[0] * scale), sy + math.ceil(tex_sel_pos[1] * scale), math.ceil(tw * scale), math.ceil(th * scale)), 2)
     tname = f"{tex_name[tex_sel_pos[-1]]}{" -> " + tex_repl[sel_pos] if tex_repl[sel_pos] not in ["0", ""] else ""}"
-    render.text(tname, screen, offset=(sx + tex_sel_pos[0] * scale, sy + (tex_sel_pos[1] + th) * scale), area=(0, 0), with_bg=True)
+    render.text(tname, screen, offset=(sx + tex_sel_pos[0] * scale, sy + (tex_sel_pos[1] + th) * scale), area=(0, 0), with_bg=True, size=2)
 
-    render.text("Close program: Save changes and exit\nEsc: Cancel changes and exit\n\nTab: Skip name\nEnter: Use current name\nBackspace: Remove last name\nR: Reload original name from file\n\nMouse wheel: Zoom in/out\nMouse drag: Move around\nArrow key: Select tile\n\nDrag and drop file here to add its name to config.conf", screen, (0, 2), area=screen.get_size(), with_bg=True, size=10)
-    render.text(f"View position: x = {round(scene_cp[0])}, y = {round(scene_cp[1])}\nZoom level: {scale}x\n\nDimension: {w}x{h}\nTile size: {tw}x{th}", screen, (2, 2), area=screen.get_size(), with_bg=True, size=10)
+    render.text("Close program: Save changes and exit\nEsc: Cancel changes and exit\n\nTab: Skip name\nEnter: Use current name\nBackspace: Remove last name\nR: Reload original name from file\n\nMouse wheel: Zoom in/out\nMouse drag: Move around\nArrow key: Select tile\n\nDrag and drop file here to add its name to config.conf", screen, (0, 2), area=screen.get_size(), with_bg=True, size=1)
+    render.text(f"View position: x = {round(scene_cp[0])}, y = {round(scene_cp[1])}\nZoom level: {scale}x\n\nDimension: {w}x{h}\nTile size: {tw}x{th}", screen, (2, 2), area=screen.get_size(), with_bg=True, size=1)
     pg.display.update()
     pgc.tick(60)
 
