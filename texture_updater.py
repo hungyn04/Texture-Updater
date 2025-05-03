@@ -93,6 +93,7 @@ def export_tex():
         tga_path_original = _new_path
         tga_path_nobackup = True
     PIL.Image.frombytes("RGBA", (w, h), pg.image.tobytes(_surf, "RGBA")).save(tga_path)
+    save_conf()
     return _f
 
 
@@ -208,7 +209,7 @@ while not _exit:
                     render.trigger_popup(f'Changes saved to "{save_conf()}"')
                     continue
                 if (ev.key == pg.K_e) and (pg.key.get_mods() & pg.KMOD_CTRL):
-                    render.trigger_popup(f'Changes saved to "{export_tex()}"')
+                    render.trigger_popup(f'Changes exported to "{export_tex()}"')
                     continue
                 if ev.key == pg.K_RETURN:
                     _pos = range(tex_count) if (pg.key.get_mods() & pg.KMOD_CTRL) else range(sel_pos, sel_pos + 1)
