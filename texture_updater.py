@@ -11,13 +11,14 @@ class render_control(object):
     # class taken from my "flappy clone" project
     def __init__(self):
         pg.font.init()
-        self.font = [pg.font.SysFont("monospace", 12), pg.font.SysFont("monospace", 20), pg.font.SysFont("monospace", 30)]
+        self.font = [pg.font.SysFont("monospace", 12), pg.font.SysFont("monospace", 16), pg.font.SysFont("monospace", 30)]
         self.bg = pg.surface.Surface((1, 1), pg.SRCALPHA)
 
     def text(self, content: str, des: pg.Surface, align: tuple = (0, 0), offset: tuple = (0, 0), area: tuple = None, with_bg: int = 175, color="white", antialiasing: bool = False, size: int = 1):
         # align: (horizontal, vertical) ---- 0: left/top, 1: middle, 2: right/bottom
         __line_list = content.split("\n")
         __line_count = len(__line_list)
+        __height = 0
         for __lindex, __lcurrent in enumerate(__line_list):
             __text = self.font[size - 1].render(__lcurrent, antialiasing, color)
             __text_rect = __text.get_rect(topleft=(0, 0))
@@ -26,10 +27,12 @@ class render_control(object):
             __al_offset_y = (__text_rect.height * __lindex, __h / 2 - (__line_count * __text_rect.height) / 2 + __text_rect.height * __lindex, __h - __line_count * __text_rect.height + __text_rect.height * __lindex)
             __text_rect.x = __al_offset_x[align[0]] + offset[0]
             __text_rect.y = __al_offset_y[align[1]] + offset[1]
+            __height += __line_count * __text_rect.height
             if with_bg != 0:
                 self.bg.fill((0, 0, 0, with_bg))
                 des.blit(pg.transform.scale(self.bg, __text_rect.size), __text_rect)
             des.blit(__text, __text_rect)
+        return __height
 
     def popup(self, content: str, duration: int, lasttime: int):
         if pg.time.get_ticks() - lasttime < duration:
@@ -79,7 +82,7 @@ def save_conf():
     return _n
 
 
-def export_tex():
+def export_tex(cre_mipmap: bool = False):
     global tga_path_nobackup, tga_path_original
     _tgap = os.path.split(tga_path)
     _n = os.path.splitext(_tgap[1])
@@ -92,7 +95,12 @@ def export_tex():
         os.rename(tga_path, _new_path)
         tga_path_original = _new_path
         tga_path_nobackup = True
-    PIL.Image.frombytes("RGBA", (w, h), pg.image.tobytes(_surf, "RGBA")).save(tga_path)
+    _img = PIL.Image.frombytes("RGBA", (w, h), pg.image.tobytes(_surf, "RGBA"))
+    _img.save(tga_path)
+    if cre_mipmap:
+        for i in range(1, int(math.log2(tw)) + 1):
+            _mtpl = int(math.exp2(i))
+            _img.resize((w // _mtpl, h // _mtpl), PIL.Image.Resampling.LANCZOS).save(os.path.join(_tgap[0], _n[0] + f"_mip{i-1}" + _n[1]))
     save_conf()
     return _f
 
@@ -141,8 +149,12 @@ with open(meta_path, "r") as inp:
         tex_pos.extend([i + [index] for i in tile["uvs"]])
         tex_name.append(tile["name"])
     tex_count = len(tex_pos)
-    if len(tex_repl) != tex_count:
-        tex_repl = [""] * tex_count
+    tex_sav_count = len(tex_repl)
+    if tex_sav_count < tex_count:
+        tex_repl.extend([""] * (tex_count - tex_sav_count))
+    elif tex_sav_count > tex_count:
+        for i in range(tex_sav_count - tex_count):
+            tex_repl.pop()
 
 w, h = tex_pos[0][4:6]
 tw, th = tex_pos[0][2:4]
@@ -153,6 +165,7 @@ _z = 1
 p_content = ""
 p_duration = 2500
 p_ltime = 0
+show_guide = False
 
 
 dbg_surf = pg.Surface((w, h), pg.SRCALPHA)
@@ -206,11 +219,16 @@ while not _exit:
             case pg.KEYDOWN:
                 if ev.key == pg.K_ESCAPE:
                     exit()
+                if ev.key == pg.K_F1:
+                    show_guide = not show_guide
                 if (ev.key == pg.K_s) and (pg.key.get_mods() & pg.KMOD_CTRL):
                     render.trigger_popup(f'Changes saved to "{save_conf()}"')
                     continue
                 if (ev.key == pg.K_e) and (pg.key.get_mods() & pg.KMOD_CTRL):
-                    render.trigger_popup(f'Changes exported to "{export_tex()}"')
+                    if pg.key.get_mods() & pg.KMOD_SHIFT:
+                        render.trigger_popup(f'Changes applied to "{export_tex(True)}" (with mipmap)')
+                    else:
+                        render.trigger_popup(f'Changes applied to "{export_tex()}"')
                     continue
                 if ev.key == pg.K_RETURN:
                     _pos = range(tex_count) if (pg.key.get_mods() & pg.KMOD_CTRL) else range(sel_pos, sel_pos + 1)
@@ -275,13 +293,15 @@ while not _exit:
     pg.draw.rect(screen, "white", (sx, sy, w * scale, h * scale), 1)
     pg.draw.rect(screen, "red", (sx + math.ceil(tex_sel_pos[0] * scale), sy + math.ceil(tex_sel_pos[1] * scale), math.ceil(tw * scale), math.ceil(th * scale)), 2)
     tname = f"{tex_name[tex_sel_pos[-1]]}{" -> " + tex_repl[sel_pos] if tex_repl[sel_pos] not in ["0", ""] else ""}"
-    render.text(tname, screen, offset=(sx + tex_sel_pos[0] * scale, sy + (tex_sel_pos[1] + th) * scale), area=(0, 0), size=2)
-    pg.draw.rect(screen, "black", (sx + tex_sel_pos[0] * scale, sy + (tex_sel_pos[1] + th) * scale + 23, tw * max(3, scale), th * max(3, scale)), 999)
-    screen.blit(pg.transform.scale_by(org_surf.subsurface((tex_sel_pos[0:2] + [tw, th])), max(3, scale)), (sx + tex_sel_pos[0] * scale, sy + (tex_sel_pos[1] + th) * scale + 23))
-    pg.draw.rect(screen, "white", (sx + tex_sel_pos[0] * scale, sy + (tex_sel_pos[1] + th) * scale + 23, tw * max(3, scale), th * max(3, scale)), 1)
+    _txt_h = render.text(tname, screen, offset=(sx + tex_sel_pos[0] * scale, sy + (tex_sel_pos[1] + th) * scale), area=(0, 0), size=2)
+    pg.draw.rect(screen, "black", (sx + tex_sel_pos[0] * scale, sy + (tex_sel_pos[1] + th) * scale + _txt_h, tw * max(3, scale), th * max(3, scale)), 999)
+    screen.blit(pg.transform.scale_by(org_surf.subsurface((tex_sel_pos[0:2] + [tw, th])), max(3, scale)), (sx + tex_sel_pos[0] * scale, sy + (tex_sel_pos[1] + th) * scale + _txt_h))
+    pg.draw.rect(screen, "white", (sx + tex_sel_pos[0] * scale, sy + (tex_sel_pos[1] + th) * scale + _txt_h, tw * max(3, scale), th * max(3, scale)), 1)
 
-    render.text("Close program: Save changes and exit\nEsc: Cancel changes and exit\nCtrl + S: Save changes\nCtrl + E: Export changes to image\n\nDel: Remove current name\n(Ctrl + Del: Apply to all)\nTab: Remove current name and move forward\nBackspace: Remove current name and move backward\nEnter: Use current name from source directory\n(Ctrl + Enter: Apply to all)\n\nMouse wheel, +, -: Zoom in/out\nMouse drag: Move around\nArrow key, WASD: Select tile\nShift: Toggle follow selector mode\n\nDrag and drop file here for quick replace\nDrag and drop folder here to change source directory", screen, (0, 2), area=screen.get_size(), size=1)
-    render.text(f"{"Follow selector mode" if follow_selector else ""}\n\nView position: x = {round(scene_cp[0])}, y = {round(scene_cp[1])}\nZoom level: {scale}x\n\nDimension: {w}x{h}\nTile size: {tw}x{th}\n\nSource directory: {source_dir}", screen, (2, 2), area=screen.get_size(), size=1)
+    render.text("Press F1 to show/hide addtional info", screen, (0, 2), area=screen.get_size(), size=1)
+    if show_guide:
+        render.text("Close program: Save changes and exit\nEsc: Cancel changes and exit\nCtrl + S: Save changes\nCtrl + E: Apply changes\nCtrl + Shift + E: Apply changes with mipmap\nDel: Remove current name\n(Ctrl + Del: Apply to all)\nTab: Remove current name and move forward\nBackspace: Remove current name and move backward\nEnter: Use current name from source directory\n(Ctrl + Enter: Apply to all)\n\nMouse wheel, +, -: Zoom in/out\nMouse drag: Move around\nArrow key, WASD: Select tile\nShift: Toggle follow selector mode\n\nDrag and drop file here for quick replace\nDrag and drop folder here to change source directory\n", screen, (0, 2), area=screen.get_size(), size=1)
+        render.text(f"{"Follow selector mode" if follow_selector else ""}\n\nView position: x = {round(scene_cp[0])}, y = {round(scene_cp[1])}\nZoom level: {scale}x\n\nDimension: {w}x{h}\nTile size: {tw}x{th}\n\nSource directory: {source_dir}", screen, (2, 2), area=screen.get_size(), size=1)
     render.popup(p_content, p_duration, p_ltime)
     pg.display.update()
     pgc.tick(60)
