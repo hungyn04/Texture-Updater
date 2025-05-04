@@ -187,7 +187,7 @@ def upd_fill(path: str = "", spos: int = -1):
     upd_mask_surf.fill("white", _cr)
     if os.path.exists(rpath(path, True)):
         _img = PIL.Image.open(path).convert("RGBA")
-        upd_surf.blit(pg.transform.scale(pg.image.frombytes(_img.tobytes(), (_img.width, _img.height), "RGBA"), [tw, th]), tex_pos[spos][0:2])
+        upd_surf.blit(pg.image.frombytes(_img.tobytes(), (_img.width, _img.height), "RGBA"), tex_pos[spos][0:2], (0, 0, tw, th))
         upd_mask_surf.fill((0, 0, 0, 0), _cr)
         return 1
     return 0 if path == "" else -1
