@@ -226,9 +226,9 @@ while not _exit:
                     continue
                 if (ev.key == pg.K_e) and (pg.key.get_mods() & pg.KMOD_CTRL):
                     if pg.key.get_mods() & pg.KMOD_SHIFT:
-                        render.trigger_popup(f'Changes applied to "{export_tex(True)}" (with mipmap)')
+                        render.trigger_popup(f'Exported spritesheet to "{export_tex(True)}" (with mipmap)')
                     else:
-                        render.trigger_popup(f'Changes applied to "{export_tex()}"')
+                        render.trigger_popup(f'Exported spritesheet to "{export_tex()}"')
                     continue
                 if ev.key == pg.K_RETURN:
                     _pos = range(tex_count) if (pg.key.get_mods() & pg.KMOD_CTRL) else range(sel_pos, sel_pos + 1)
@@ -300,7 +300,7 @@ while not _exit:
 
     render.text("Press F1 to show/hide addtional info", screen, (0, 2), area=screen.get_size(), size=1)
     if show_guide:
-        render.text("Close program: Save changes and exit\nEsc: Cancel changes and exit\nCtrl + S: Save changes\nCtrl + E: Apply changes\nCtrl + Shift + E: Apply changes with mipmap\nDel: Remove current name\n(Ctrl + Del: Apply to all)\nTab: Remove current name and move forward\nBackspace: Remove current name and move backward\nEnter: Use current name from source directory\n(Ctrl + Enter: Apply to all)\n\nMouse wheel, +, -: Zoom in/out\nMouse drag: Move around\nArrow key, WASD: Select tile\nShift: Toggle follow selector mode\n\nDrag and drop file here for quick replace\nDrag and drop folder here to change source directory\n", screen, (0, 2), area=screen.get_size(), size=1)
+        render.text("Close program: Save changes and exit\nEsc: Cancel changes and exit\nCtrl + S: Save changes\nCtrl + E: Export spritesheet\nCtrl + Shift + E: Export spritesheet with mipmaps\n\nDel: Remove current name\n(Ctrl + Del: Apply to all)\nTab: Remove current name and move forward\nBackspace: Remove current name and move backward\nEnter: Use current name from source directory\n(Ctrl + Enter: Apply to all)\n\nMouse wheel, +, -: Zoom in/out\nMouse drag: Move around\nArrow key, WASD: Select tile\nShift: Toggle follow selector mode\n\nDrag and drop file here for quick replace\nDrag and drop folder here to change source directory\n", screen, (0, 2), area=screen.get_size(), size=1)
         render.text(f"{"Follow selector mode" if follow_selector else ""}\n\nView position: x = {round(scene_cp[0])}, y = {round(scene_cp[1])}\nZoom level: {scale}x\n\nDimension: {w}x{h}\nTile size: {tw}x{th}\n\nSource directory: {source_dir}", screen, (2, 2), area=screen.get_size(), size=1)
     render.popup(p_content, p_duration, p_ltime)
     pg.display.update()
