@@ -239,7 +239,7 @@ while not _exit:
                     sel_pos = 0 if (ev.key == pg.K_BACKSPACE and sel_pos < 1) else sel_pos
                 sel_pos = sel_pos + (ev.key in (pg.K_DOWN, pg.K_s)) * tc - (ev.key in (pg.K_UP, pg.K_w)) * tc
             case pg.DROPFILE:
-                _chk = rpath(ev.file, True, True)
+                _chk = rpath(ev.file, allow_return_dir=True)
                 if _chk[1]:
                     source_dir = _chk[0]
                     render.trigger_popup(f'Current source directory changed to\n"{source_dir}"')
@@ -276,7 +276,9 @@ while not _exit:
     pg.draw.rect(screen, "red", (sx + math.ceil(tex_sel_pos[0] * scale), sy + math.ceil(tex_sel_pos[1] * scale), math.ceil(tw * scale), math.ceil(th * scale)), 2)
     tname = f"{tex_name[tex_sel_pos[-1]]}{" -> " + tex_repl[sel_pos] if tex_repl[sel_pos] not in ["0", ""] else ""}"
     render.text(tname, screen, offset=(sx + tex_sel_pos[0] * scale, sy + (tex_sel_pos[1] + th) * scale), area=(0, 0), size=2)
+    pg.draw.rect(screen, "black", (sx + tex_sel_pos[0] * scale, sy + (tex_sel_pos[1] + th) * scale + 23, tw * max(3, scale), th * max(3, scale)), 999)
     screen.blit(pg.transform.scale_by(org_surf.subsurface((tex_sel_pos[0:2] + [tw, th])), max(3, scale)), (sx + tex_sel_pos[0] * scale, sy + (tex_sel_pos[1] + th) * scale + 23))
+    pg.draw.rect(screen, "white", (sx + tex_sel_pos[0] * scale, sy + (tex_sel_pos[1] + th) * scale + 23, tw * max(3, scale), th * max(3, scale)), 1)
 
     render.text("Close program: Save changes and exit\nEsc: Cancel changes and exit\nCtrl + S: Save changes\nCtrl + E: Export changes to image\n\nDel: Remove current name\n(Ctrl + Del: Apply to all)\nTab: Remove current name and move forward\nBackspace: Remove current name and move backward\nEnter: Use current name from source directory\n(Ctrl + Enter: Apply to all)\n\nMouse wheel, +, -: Zoom in/out\nMouse drag: Move around\nArrow key, WASD: Select tile\nShift: Toggle follow selector mode\n\nDrag and drop file here for quick replace\nDrag and drop folder here to change source directory", screen, (0, 2), area=screen.get_size(), size=1)
     render.text(f"{"Follow selector mode" if follow_selector else ""}\n\nView position: x = {round(scene_cp[0])}, y = {round(scene_cp[1])}\nZoom level: {scale}x\n\nDimension: {w}x{h}\nTile size: {tw}x{th}\n\nSource directory: {source_dir}", screen, (2, 2), area=screen.get_size(), size=1)
