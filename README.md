@@ -15,7 +15,7 @@ This script aims to utilize that to make this task a little less tedious by help
 
 ## What can this do?
 
-Let's see how the everything in structured first: inside `data/images/` of the game, there is the `terrain-atlas.tga` file, along with its smaller version used as mipmap. And then there is `terrain.meta` file which saves us time by let us know which which texture is in this position, what its name is, and its dimension.
+Let's see how the everything in structured first: inside `data/images/` of the game, there is the `terrain-atlas.tga` file, along with its smaller version used as mipmap. And then there is `terrain.meta` file which saves us time by let us know which texture is in this position, what its name is, and its dimension.
 
 Now that you know, here are what this script provides:
 
@@ -65,7 +65,7 @@ Additionally, you can press Ctrl + Shift + E to create all of its mipmap variant
 > What will be shown in the main editor:
 > 
 > *Selector*: Red rectangle that indicate the texture that's currently selected.
-> *Tooltip*: Shown right under the selector, which gives you the name of the current texture for reference, and a preview of old texture right below to help you locating and comparing texture. 
+> *Tooltip*: Shown right under the selector, which gives you the name of the current texture for reference, and a preview of old texture right below to help you locating and comparing texture.
 > *The darkened texture atlas*: Show what the original look like, as well as the possible position that you can edit, any newly added texture will sit in front of this layer.
 
 - ***Adding a replacement texture***: You can replace the selected texture by dragging the image file into the window. Any invalid file will show a red question mark.
