@@ -20,7 +20,7 @@ class render_control(object):
     # class taken from my "flappy clone" project
     def __init__(self):
         pg.font.init()
-        self.font = [pg.font.SysFont("monospace", 12), pg.font.SysFont("monospace", 16), pg.font.SysFont("monospace", 30)]
+        self.font = [pg.font.SysFont("monospace", 13), pg.font.SysFont("monospace", 16), pg.font.SysFont("monospace", 30)]
         self.bg = pg.surface.Surface((1, 1), pg.SRCALPHA)
 
     def text(self, content: str, des: pg.Surface, align: tuple = (0, 0), offset: tuple = (0, 0), area: tuple = None, with_bg: int = 175, color="white", antialiasing: bool = False, size: int = 1):
@@ -217,6 +217,8 @@ def upd_fill(path: str = "", spos: int = -1):
 for id in range(tex_count):
     dbg_fill(upd_fill(tex_repl[id], id), id)
 
+GUIDE = "Close program: Save changes and exit\nEsc: Cancel changes and exit\nCtrl + S: Save changes\nCtrl + E: Export spritesheet\nCtrl + Shift + E: Export spritesheet with mipmaps\n\nDel: Remove current name\n(Ctrl + Del: Apply to all)\nTab: Remove current name and move forward\nBackspace: Remove current name and move backward\nEnter: Use current name from source directory\n(Ctrl + Enter: Apply to all)\n\nMouse wheel, +, -: Zoom in/out\nMouse drag: Move around\nArrow key, WASD: Select tile\nShift: Toggle follow selector mode\n\nDrag and drop file here for quick replace\nDrag and drop folder here to change source directory\n"
+
 while not _exit:
     mx, my = pg.mouse.get_pos()
     for ev in pg.event.get():
@@ -297,7 +299,6 @@ while not _exit:
     test_surf.blit(dbg_surf, (math.ceil(scene_cp[0] / scale), math.ceil(scene_cp[1] / scale)))
     test_surf.blit(upd_surf, (math.ceil(scene_cp[0] / scale), math.ceil(scene_cp[1] / scale)))
     screen.blit(pg.transform.scale_by(test_surf, scale), (0, 0))
-
     pg.draw.rect(screen, "white", (sx, sy, w * scale, h * scale), 1)
     pg.draw.rect(screen, "red", (sx + math.ceil(tex_sel_pos[0] * scale), sy + math.ceil(tex_sel_pos[1] * scale), math.ceil(tw * scale), math.ceil(th * scale)), 2)
     tname = f"{tex_name[tex_sel_pos[-1]]}{" -> " + tex_repl[sel_pos] if tex_repl[sel_pos] not in ["0", ""] else ""}"
@@ -308,7 +309,7 @@ while not _exit:
 
     render.text("Press F1 to show/hide addtional info", screen, (0, 2), area=screen.get_size(), size=1)
     if show_guide:
-        render.text("Close program: Save changes and exit\nEsc: Cancel changes and exit\nCtrl + S: Save changes\nCtrl + E: Export spritesheet\nCtrl + Shift + E: Export spritesheet with mipmaps\n\nDel: Remove current name\n(Ctrl + Del: Apply to all)\nTab: Remove current name and move forward\nBackspace: Remove current name and move backward\nEnter: Use current name from source directory\n(Ctrl + Enter: Apply to all)\n\nMouse wheel, +, -: Zoom in/out\nMouse drag: Move around\nArrow key, WASD: Select tile\nShift: Toggle follow selector mode\n\nDrag and drop file here for quick replace\nDrag and drop folder here to change source directory\n", screen, (0, 2), area=screen.get_size(), size=1)
+        render.text(GUIDE, screen, (0, 2), area=screen.get_size(), size=1)
         render.text(f"{"Follow selector mode" if follow_selector else ""}\n\nView position: x = {round(scene_cp[0])}, y = {round(scene_cp[1])}\nZoom level: {scale}x\n\nDimension: {w}x{h}\nTile size: {tw}x{th}\n\nSource directory: {source_dir}", screen, (2, 2), area=screen.get_size(), size=1)
     render.popup(p_content, p_duration, p_ltime)
     pg.display.update()
