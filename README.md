@@ -21,7 +21,7 @@ Now that you know, here are what this script provides:
 
 - **Replacing textures**: The core feature, you can drag an image into the editor to replace the currently selected one, and there is bulk mode as well which we will talk about later.
 - **Backup**: Automatically create a backup of the original texture so you don't have to worry about ruining the entire thing.
-- **Create mimaps**: Automatically create smaller version of the atlas (have `mip[i]` suffix), so your texture will be properly rendered in the game.
+- **Create mimaps**: Automatically create smaller version of the atlas (`mip[i]` suffix), so your texture will be properly rendered in the game.
 - **Visual editor**: Allows you to easily navigate the program.
 - **Saving work**: Let you save a config file that can be opened later and continue working.
 
@@ -32,7 +32,7 @@ Now that you know, here are what this script provides:
 git clone https://github.com/hungyn04/Texture-Updater.git
 cd Texture-Updater
 ```
-2. Create a virtual environment so not to clutter you Python installation, and then install pillow and pygame:
+2. Create a virtual environment so not to clutter you Python installation, then install pillow and pygame:
 ```
 python -m venv .venv
 ```
@@ -50,27 +50,33 @@ You'll be presented with a CLI that asks you for config file, if you've saved wo
 Otherwise, just press Enter to skip it. You will then be asked for `.meta` file, drag the file into it or type the file path and press Enter.
 If nothing goes wrong, you will be asked for `.tga` texture atlas file (`.png` is also possible), drag the file into it or type the file path and press Enter.
 
-Visual editor will popup, you can press F1 to show all the features/infomation and keyboard shortcut that you can use. Here is what you can do inside this visual editor:
+Visual editor will popup, you can press F1 to show all the features/infomation and keyboard shortcut that you can use. Here are what you can do inside this visual editor:
 
 ### 1. Saving/Exporting:
 
 - ***Save changes***: You can manually close the window or press Ctrl + S to save the current workspace into `.conf` file which you can open later. Note that this does not do anything to the original texture.
-To close without saving, press Esc and then program will exit without creating `.conf` file.
+
+  To close without saving, press Esc and the program will exit without creating `.conf` file.
 
 - ***Export changes***: Press Ctrl + E to export the modified texture atlas, which will first rename your original texture (`original` suffix), and then create a texture with the same name in place of your original file.
-Additionally, you can press Ctrl + Shift + E to create all of its mipmap variants (`mip[i]` suffix), note that this is will replace any existing mipmap-ed textures unlike the full texture, no backup will be created.
+
+  Additionally, you can press Ctrl + Shift + E to create all of its mipmap variants (`mip[i]` suffix), note that this is will replace any existing mipmap-ed textures unlike the full texture, no backup will be created.
 
 ### 2. Editing:
 
 > What will be shown in the main editor:
 > 
-> *Selector*: Red rectangle that indicate the texture that's currently selected.
-> *Tooltip*: Shown right under the selector, which gives you the name of the current texture for reference, and a preview of old texture right below to help you locating and comparing texture.
-> *The darkened texture atlas*: Show what the original look like, as well as the possible position that you can edit, any newly added texture will sit in front of this layer.
+> ***Selector***: Red rectangle that indicate the texture that's currently selected.
+> 
+> ***Tooltip***: Shown right under the selector, which gives you the name of the current texture for reference, and a preview of old texture right below to help you locating and comparing texture.
+> 
+> ***The darkened texture atlas***: Show what the original look like, as well as the possible position that you can edit, any newly added texture will sit in front of this layer.
 
 - ***Adding a replacement texture***: You can replace the selected texture by dragging the image file into the window. Any invalid file will show a red question mark.
-Alternatively, press Enter to use the file with the same name as the texture in the current source directory (shown on the bottom right corner after you press F1, default to the directory where the script is located).
-Note that selector will automatically move to the next position after adding, so you can replace all the textures sequentially without having to move the selector manually.
+
+  Alternatively, press Enter to use the file with the same name as the texture in the current source directory (shown on the bottom right corner after you press F1, default to the directory where the script is located).
+
+  Note that selector will automatically move to the next position after adding, so you can replace all the textures sequentially without having to move the selector manually.
 
 > You can change the source directory by dragging the folder/directory into the window.
 
