@@ -33,7 +33,7 @@ git clone https://github.com/hungyn04/Texture-Updater.git
 cd Texture-Updater
 ```
 
-2. Create a virtual environment so not to clutter you Python installation, then install pillow and pygame (or using `requirements.txt`):
+2. Create a virtual environment so not to clutter you Python installation, then install pillow and pygame-ce (or using `requirements.txt`):
 
 ```
 python -m venv .venv
