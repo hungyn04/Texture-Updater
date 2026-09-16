@@ -1,10 +1,19 @@
-import os, sys, json, math, PIL
+import os, sys, ctypes
+import json, math
+import PIL, PIL.Image
+import pygame as pg
+
+if sys.platform == "win32":
+    try:
+        ctypes.windll.shcore.SetProcessDpiAwareness(2)
+    except Exception:
+        try:
+            ctypes.windll.user32.SetProcessDPIAware()
+        except Exception:
+            pass
 
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = ""
 os.chdir(os.path.realpath(os.path.dirname(__file__)))
-
-import PIL.Image
-import pygame as pg
 
 
 class render_control(object):
