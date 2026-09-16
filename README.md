@@ -43,7 +43,7 @@ python -m venv .venv
 > https://docs.python.org/3/library/venv.html#how-venvs-work
 
 ```
-pip install requirements.txt
+pip install -r requirements.txt
 ```
 
 3. Once done, run the script:
