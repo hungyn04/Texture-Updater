@@ -125,8 +125,7 @@ tga_path_nobackup = False
 tga_path_original = ""
 
 if not os.path.exists(rpath(_conf)):
-    _conf = input("Path to config file (.conf, leave blank to create new one - drag file here for quick input): ")
-
+    _conf = input("Path to config file (.conf, leave blank to create new one - drag file here for quick input): ").replace("'", "")
 try:
     with open(_conf, "r", encoding="utf-8") as inp:
         meta_path = rpath(inp.readline().strip())
@@ -142,8 +141,8 @@ try:
 except:
     print("Skipped .conf file, or file not found, or file contains error(s).")
     while not os.path.exists(meta_path):
-        meta_path = rpath(input("Path to .meta file - drag file here for quick input: "))
-    tga_path = rpath(input("Path to target .tga file (leave blank to create output.tga - drag file here for quick input): "), True)
+        meta_path = rpath(input("Path to .meta file - drag file here for quick input: ").replace("'", ""))
+    tga_path = rpath(input("Path to target .tga file (leave blank to create output.tga - drag file here for quick input): ").replace("'", ""), True)
     tex_repl = []
 
 pg.init()
