@@ -54,6 +54,12 @@ python3 ./texture_updater.py
 
 You'll be presented with a CLI that asks you for config file, if you've saved work before, just drag the `.conf` file into it or type the file path and press Enter.
 
+You can also open `.conf` file by providing the file path as an argument when running the script:
+
+```
+python3 ./texture_updater.py ./example.conf
+```
+
 Otherwise, just press Enter to skip it. You will then be asked for `.meta` file, drag the file into it or type the file path and press Enter.
 If nothing goes wrong, you will be asked for `.tga` texture atlas file (`.png` is also possible), drag the file into it or type the file path and press Enter.
 
